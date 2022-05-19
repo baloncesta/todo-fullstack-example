@@ -1,6 +1,24 @@
 # todo-fullstack-example
 
+To start react app
+
+```bash
+cd react todo
+```
+
+```bash
+npm install
+```
+
+```bash
+npm run start
+```
+
 Helpful reference to understand this project
+
+GRAPHQL
+
+https://www.youtube.com/watch?v=eIQh02xuVw4
 
 JS
 
@@ -22,21 +40,7 @@ https://reactjs.org/docs/hooks-intro.html
 
 https://reactjs.org/docs/hooks-state.html
 
-To start react app
-
-```bash
-cd react todo
-```
-
-```bash
-npm install
-```
-
-```bash
-npm run start
-```
-
-Extremely fast intros on concepts
+Extremely fast unorganized intros on concepts made by me lol
 
 https://www.loom.com/share/4d5af31af1cb44d1ac58d823ec766975
 
