@@ -32,4 +32,10 @@ npm install
 npm run start
 ```
 
-Extremely fast intro
+Extremely fast intros on concepts
+
+https://www.loom.com/share/4d5af31af1cb44d1ac58d823ec766975
+
+https://www.loom.com/share/3ecbc27c0ae048e987d52ba8028de5a6
+
+https://www.loom.com/share/50b6bb1ae04f4630aa492b829fa48a66
