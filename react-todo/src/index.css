@@ -1,0 +1,40 @@
+*, html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 20px;
+}
+
+.todo-form {
+  padding: 20px;
+}
+
+.todo-form-description, button {
+  padding: 10px;
+}
+
+.todo-form-description {
+  margin-right: 10px;
+}
+
+
+.list {
+  padding: 10px;
+}
+
+.list-item {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.list-item-description {
+  padding-left: 20px;
+}
+
+.list-item-description.completed {
+  text-decoration: line-through;
+}
