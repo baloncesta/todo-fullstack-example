@@ -13,4 +13,4 @@ export default `
       updateTodo(todo: Todo): Todo
       deleteTodo(id: ID!): Todo
     }
-`;
+`
