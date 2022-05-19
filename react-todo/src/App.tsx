@@ -92,9 +92,6 @@ function App() {
                 className={`list-item-description ${
                   isComplete ? 'completed' : ''
                 }`}
-                style={{
-                  textDecoration: isComplete ? 'line-through' : 'none',
-                }}
               >
                 {todo.description}
               </span>
