@@ -38,7 +38,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <ApolloProvider client={client}>
-    <TodoGQL />
+    {/* <TodoGQL /> */}
+    <App />
   </ApolloProvider>
 );
 
