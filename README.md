@@ -4,6 +4,8 @@ Helpful reference to understand this project
 
 JS
 
+https://www.youtube.com/watch?v=zQnBQ4tB3ZA&t=71s&ab_channel=Fireship
+
 https://javascript.info/arrow-functions-basics
 
 https://javascript.info/array-methods#transform-an-array
