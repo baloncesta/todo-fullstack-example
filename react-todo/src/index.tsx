@@ -12,9 +12,13 @@ const client = new ApolloClient({
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-  <ApolloProvider client={client}>
-    {process.env.REACT_APP_GQL_MODE ? <TodoGQL /> : <App />}
-  </ApolloProvider>
+  process.env.REACT_APP_GQL_MODE ? (
+    <ApolloProvider client={client}>
+      <TodoGQL />
+    </ApolloProvider>
+  ) : (
+    <App />
+  )
 )
 
 // If you want to start measuring performance in your app, pass a function
