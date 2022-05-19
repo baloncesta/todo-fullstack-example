@@ -23,14 +23,22 @@ const TodoGQL = () => {
   `
   const { loading, error, data } = useQuery(TODOS, {})
   const [addTodo, { data: todoData, loading: todoLoading, error: todoError }] =
-    useMutation(CREATE_TODO)
-  // const TODOS_FRAGMENT = gql`
-  //   fragment TodosFragment on Todo {
-  //     id
-  //     description
-  //     status
-  //   }
-  // `
+    useMutation(CREATE_TODO, {
+      update: (cache, mutationResult) => {
+        cache.updateQuery(
+          {
+            query: TODOS,
+          },
+          (data) => {
+            console.log(data)
+            return {
+              ...data,
+              allTodos: [...data.allTodos, mutationResult.data.createTodo],
+            }
+          }
+        )
+      },
+    })
   const addTheTodo = (description: string) => {
     addTodo({
       variables: {
