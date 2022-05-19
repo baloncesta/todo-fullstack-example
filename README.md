@@ -10,6 +10,8 @@ https://javascript.info/array-methods#transform-an-array
 
 React
 
+https://www.youtube.com/watch?v=Tn6-PIqc4UM&ab_channel=Fireship
+
 https://reactjs.org/docs/introducing-jsx.html
 
 Hooks
