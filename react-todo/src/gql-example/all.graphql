@@ -1,0 +1,17 @@
+# Query {
+#   todos: Todo[]
+# }
+
+# Mutation {
+#   createTheTodo(description: String!, status: String!)
+# }
+
+mutation createTheTodo($description: String!, $status: TodoStatus!) {
+  createTodo(description: $description, status: $status) {
+    todo {
+      id
+      status
+      description
+    }
+  }
+}

@@ -1,0 +1,23 @@
+enum TodoStatus {
+  Active
+  Completed
+}
+
+type Todo {
+  id: ID!
+  description: String!
+  status: TodoStatus
+}
+
+type Query {
+  todos: [Todo]!
+}
+
+type CreateTodoResponse {
+  todo: Todo
+  message: String!
+}
+
+type Mutation {
+  createTodo(description: String!, status: TodoStatus!): CreateTodoResponse!
+}

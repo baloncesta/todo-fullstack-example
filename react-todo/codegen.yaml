@@ -1,0 +1,12 @@
+schema: ./src/gql-example/schema.graphql
+documents: './src/**/*.graphql'
+generates:
+  src/gql-example/generated-types.tsx:
+    config:
+      withHooks: true
+      withComponent: false
+      withHOC: false
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
