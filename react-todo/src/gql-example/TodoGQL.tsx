@@ -16,8 +16,8 @@ const TodoGQL = () => {
         description,
         status: TodoStatus.Active,
       },
-      update: (cache) => {
-        console.log('foo')
+      update: (cache, { data }) => {
+        console.log(data?.createTodo.todo)
       },
     })
   }

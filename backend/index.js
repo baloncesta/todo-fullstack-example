@@ -35,8 +35,10 @@ const resolvers = {
     todos: () => [{ id: 1, description: 'foo', status: 'active' }],
   },
   Mutation: {
-    createTodo: () => {
-      return { todo: { id: 1, description: 'foo', status: 'active' } }
+    createTodo: (ctx, payload) => {
+      return {
+        todo: { id: 1, description: payload.description, status: 'active' },
+      }
     },
   },
 }
