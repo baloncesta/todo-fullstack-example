@@ -5,14 +5,27 @@ import http from 'http'
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
+  enum TodoStatus {
+    active
+    complete
+  }
   type Todo {
     id: ID!
     description: String!
     # temp
-    status: String!
+    status: TodoStatus!
   }
+
+  type TodoResponse {
+    todo: Todo!
+  }
+
   type Query {
     todos: [Todo]
+  }
+
+  type Mutation {
+    createTodo(description: String!, status: TodoStatus!): TodoResponse!
   }
 `
 
@@ -20,6 +33,11 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     todos: () => [{ id: 1, description: 'foo', status: 'active' }],
+  },
+  Mutation: {
+    createTodo: () => {
+      return { todo: { id: 1, description: 'foo', status: 'active' } }
+    },
   },
 }
 
