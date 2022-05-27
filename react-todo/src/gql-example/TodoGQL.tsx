@@ -1,4 +1,3 @@
-import { gql } from '@apollo/client'
 import Form from './Form'
 import {
   GetTodosDocument,
@@ -10,7 +9,6 @@ import {
 
 const TodoGQL = () => {
   const { data, loading, error } = useGetTodosQuery()
-  console.log(error, data, loading)
   const [addTodo] = useCreateTheTodoMutation()
 
   const addTheTodo = (description: string) => {
@@ -18,6 +16,18 @@ const TodoGQL = () => {
       variables: {
         description,
         status: TodoStatus.Active,
+      },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        createTodo: {
+          __typename: 'CreateTodoResponse',
+          todo: {
+            __typename: 'Todo',
+            id: 'a',
+            status: TodoStatus.Active,
+            description,
+          },
+        },
       },
       update: (cache, { data }) => {
         const todoItem = data?.createTodo.todo
