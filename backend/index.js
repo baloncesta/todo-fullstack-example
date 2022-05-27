@@ -52,19 +52,23 @@ const typeDefs = gql`
   }
 `
 
+const todos = []
+
 // Provide resolver functions for your schema fields
 const resolvers = {
   Query: {
-    todos: () => [{ id: 1, description: 'foo', status: 'active' }],
+    todos: () => todos,
   },
   Mutation: {
     createTodo: (ctx, { description }) => {
+      const todo = {
+        id: uuid(),
+        description,
+        status: 'active',
+      }
+      todos.push(todo)
       return {
-        todo: {
-          id: uuid(),
-          description,
-          status: 'active',
-        },
+        todo,
       }
     },
   },
