@@ -1,0 +1,23 @@
+{
+  "name": "todo-fullstack-example",
+  "version": "1.0.0",
+  "description": "To start react app",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"cd react-todo && npm run start\" \"cd backend && npm run start\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baloncesta/todo-fullstack-example.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baloncesta/todo-fullstack-example/issues"
+  },
+  "homepage": "https://github.com/baloncesta/todo-fullstack-example#readme",
+  "dependencies": {
+    "concurrently": "^7.2.1"
+  }
+}
