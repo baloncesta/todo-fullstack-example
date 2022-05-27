@@ -20,20 +20,21 @@ const TodoGQL = () => {
         status: TodoStatus.Active,
       },
       update: (cache, { data }) => {
-        if (data?.createTodo.todo) {
-          const result = cache.readQuery<GetTodosQuery>({
-            query: GetTodosDocument,
-          })
-          if (!result) {
-            return
-          }
-          cache.writeQuery({
-            query: GetTodosDocument,
-            data: {
-              ...result,
-              todos: [...result.todos, data?.createTodo.todo],
+        const todoItem = data?.createTodo.todo
+        if (todoItem) {
+          cache.updateQuery<GetTodosQuery>(
+            {
+              query: GetTodosDocument,
             },
-          })
+            (data) => {
+              if (!data) {
+                return
+              }
+              return {
+                todos: [...data.todos, todoItem],
+              }
+            }
+          )
         }
       },
     })
