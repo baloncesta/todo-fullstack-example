@@ -15,3 +15,11 @@ mutation createTheTodo($description: String!, $status: TodoStatus!) {
     }
   }
 }
+
+query getTodos {
+  todos {
+    id
+    description
+    status
+  }
+}
