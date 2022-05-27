@@ -1,12 +1,12 @@
 enum TodoStatus {
-  Active
-  Completed
+  active
+  completed
 }
 
 type Todo {
   id: ID!
   description: String!
-  status: TodoStatus
+  status: TodoStatus!
 }
 
 type Query {

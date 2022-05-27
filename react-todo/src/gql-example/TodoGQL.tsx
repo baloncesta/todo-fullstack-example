@@ -1,5 +1,8 @@
+import { gql } from '@apollo/client'
 import Form from './Form'
 import {
+  GetTodosDocument,
+  GetTodosQuery,
   TodoStatus,
   useCreateTheTodoMutation,
   useGetTodosQuery,
@@ -17,7 +20,21 @@ const TodoGQL = () => {
         status: TodoStatus.Active,
       },
       update: (cache, { data }) => {
-        console.log(data?.createTodo.todo)
+        if (data?.createTodo.todo) {
+          const result = cache.readQuery<GetTodosQuery>({
+            query: GetTodosDocument,
+          })
+          if (!result) {
+            return
+          }
+          cache.writeQuery({
+            query: GetTodosDocument,
+            data: {
+              ...result,
+              todos: [...result.todos, data?.createTodo.todo],
+            },
+          })
+        }
       },
     })
   }
