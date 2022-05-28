@@ -95,6 +95,7 @@ const resolvers = {
     updateTodo: (ctx, { id, description, status }) => {
       const index = todos.findIndex((todo) => todo.id === id)
       const todo = { ...todos[index], description, status }
+      todos[index] = todo
       return {
         todo,
       }
