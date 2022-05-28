@@ -21,14 +21,34 @@ export type CreateTodoResponse = {
   todo?: Maybe<Todo>;
 };
 
+export type DeleteTodoResponse = {
+  __typename?: 'DeleteTodoResponse';
+  message: Scalars['String'];
+  todo?: Maybe<Todo>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createTodo: CreateTodoResponse;
+  deleteTodo: DeleteTodoResponse;
+  updateTodo: UpdateTodoResponse;
 };
 
 
 export type MutationCreateTodoArgs = {
   description: Scalars['String'];
+  status: TodoStatus;
+};
+
+
+export type MutationDeleteTodoArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationUpdateTodoArgs = {
+  description: Scalars['String'];
+  id: Scalars['ID'];
   status: TodoStatus;
 };
 
@@ -49,6 +69,12 @@ export enum TodoStatus {
   Completed = 'completed'
 }
 
+export type UpdateTodoResponse = {
+  __typename?: 'UpdateTodoResponse';
+  message: Scalars['String'];
+  todo?: Maybe<Todo>;
+};
+
 export type CreateTheTodoMutationVariables = Exact<{
   description: Scalars['String'];
   status: TodoStatus;
@@ -56,6 +82,13 @@ export type CreateTheTodoMutationVariables = Exact<{
 
 
 export type CreateTheTodoMutation = { __typename?: 'Mutation', createTodo: { __typename?: 'CreateTodoResponse', todo?: { __typename?: 'Todo', id: string, status: TodoStatus, description: string } | null } };
+
+export type DeleteTheTodoMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteTheTodoMutation = { __typename?: 'Mutation', deleteTodo: { __typename?: 'DeleteTodoResponse', todo?: { __typename?: 'Todo', id: string, status: TodoStatus, description: string } | null } };
 
 export type GetTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -101,6 +134,43 @@ export function useCreateTheTodoMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateTheTodoMutationHookResult = ReturnType<typeof useCreateTheTodoMutation>;
 export type CreateTheTodoMutationResult = Apollo.MutationResult<CreateTheTodoMutation>;
 export type CreateTheTodoMutationOptions = Apollo.BaseMutationOptions<CreateTheTodoMutation, CreateTheTodoMutationVariables>;
+export const DeleteTheTodoDocument = gql`
+    mutation deleteTheTodo($id: ID!) {
+  deleteTodo(id: $id) {
+    todo {
+      id
+      status
+      description
+    }
+  }
+}
+    `;
+export type DeleteTheTodoMutationFn = Apollo.MutationFunction<DeleteTheTodoMutation, DeleteTheTodoMutationVariables>;
+
+/**
+ * __useDeleteTheTodoMutation__
+ *
+ * To run a mutation, you first call `useDeleteTheTodoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTheTodoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTheTodoMutation, { data, loading, error }] = useDeleteTheTodoMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTheTodoMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTheTodoMutation, DeleteTheTodoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTheTodoMutation, DeleteTheTodoMutationVariables>(DeleteTheTodoDocument, options);
+      }
+export type DeleteTheTodoMutationHookResult = ReturnType<typeof useDeleteTheTodoMutation>;
+export type DeleteTheTodoMutationResult = Apollo.MutationResult<DeleteTheTodoMutation>;
+export type DeleteTheTodoMutationOptions = Apollo.BaseMutationOptions<DeleteTheTodoMutation, DeleteTheTodoMutationVariables>;
 export const GetTodosDocument = gql`
     query getTodos {
   todos {

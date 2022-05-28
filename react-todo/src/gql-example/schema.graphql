@@ -18,6 +18,22 @@ type CreateTodoResponse {
   message: String!
 }
 
+type DeleteTodoResponse {
+  todo: Todo
+  message: String!
+}
+
+type UpdateTodoResponse {
+  todo: Todo
+  message: String!
+}
+
 type Mutation {
   createTodo(description: String!, status: TodoStatus!): CreateTodoResponse!
+  deleteTodo(id: ID!): DeleteTodoResponse!
+  updateTodo(
+    id: ID!
+    description: String!
+    status: TodoStatus!
+  ): UpdateTodoResponse!
 }

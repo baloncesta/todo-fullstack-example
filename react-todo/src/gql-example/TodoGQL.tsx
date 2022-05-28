@@ -4,8 +4,43 @@ import {
   GetTodosQuery,
   TodoStatus,
   useCreateTheTodoMutation,
+  useDeleteTheTodoMutation,
   useGetTodosQuery,
 } from './generated-types'
+
+const TodoItem = ({ todo }: { todo: any }) => {
+  const [deleteTheTodo] = useDeleteTheTodoMutation()
+  const deleteTodo = (id: string) => {
+    deleteTheTodo({
+      variables: { id },
+      update: (cache, { data }) => {
+        const todoItem = data?.deleteTodo.todo
+        if (!todoItem) {
+          return
+        }
+        cache.updateQuery<GetTodosQuery>(
+          {
+            query: GetTodosDocument,
+          },
+          (data) => {
+            if (!data) {
+              return
+            }
+            const todos = [...data.todos].filter((todo) => todoItem.id !== id)
+            return {
+              todos,
+            }
+          }
+        )
+      },
+    })
+  }
+  return (
+    <li>
+      {todo?.description} <span onClick={() => deleteTodo(todo.id)}>x</span>
+    </li>
+  )
+}
 
 const TodoGQL = () => {
   const { data, loading, error } = useGetTodosQuery()
@@ -51,12 +86,13 @@ const TodoGQL = () => {
   }
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error :(</p>
+  const todos = data?.todos || []
   return (
     <>
       <Form onSubmit={addTheTodo} />
       <ul>
-        {data?.todos.map((todo) => (
-          <li key={todo?.id}>{todo?.description}</li>
+        {todos.map((todo) => (
+          <TodoItem key={todo?.id} todo={todo} />
         ))}
       </ul>
     </>
