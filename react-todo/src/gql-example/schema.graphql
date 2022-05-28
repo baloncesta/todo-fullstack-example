@@ -1,6 +1,6 @@
 enum TodoStatus {
   active
-  completed
+  complete
 }
 
 type Todo {

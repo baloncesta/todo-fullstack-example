@@ -10,15 +10,82 @@ import {
   useUpdateTheTodoMutation,
 } from './generated-types'
 
+const TodoItemToggle = ({ todo }: { todo: any }) => {
+  const [updateTheTodo] = useUpdateTheTodoMutation()
+  const toggleTodo = () => {
+    const updatedTodo = {
+      id: todo.id,
+      description: todo.description,
+      status:
+        todo.status === TodoStatus.Active
+          ? TodoStatus.Complete
+          : TodoStatus.Active,
+    }
+    updateTheTodo({
+      variables: updatedTodo,
+      optimisticResponse: {
+        __typename: 'Mutation',
+        updateTodo: {
+          __typename: 'UpdateTodoResponse',
+          todo: {
+            __typename: 'Todo',
+            ...updatedTodo,
+          },
+        },
+      },
+      update: (cache, { data }) => {
+        const todoItem = data?.updateTodo.todo
+        if (!todoItem) {
+          return
+        }
+        cache.updateQuery<GetTodosQuery>(
+          {
+            query: GetTodosDocument,
+          },
+          (data) => {
+            if (!data) {
+              return
+            }
+            const todos = [...data.todos].map((todo) =>
+              todo?.id === todoItem.id ? updatedTodo : todo
+            )
+            return {
+              todos,
+            }
+          }
+        )
+      },
+    })
+  }
+  return (
+    <input
+      type="checkbox"
+      onChange={toggleTodo}
+      checked={todo.status === TodoStatus.Complete}
+    />
+  )
+}
+
 const TodoItemInput = ({ todo }: { todo: any }) => {
   const [updateTheTodo] = useUpdateTheTodoMutation()
   const [theDescription, setTheDescription] = useState('')
   const updateTodo = () => {
+    const updated = {
+      id: todo.id,
+      description: theDescription,
+      status: todo.status,
+    }
     updateTheTodo({
-      variables: {
-        id: todo.id,
-        description: theDescription,
-        status: todo.status,
+      variables: updated,
+      optimisticResponse: {
+        __typename: 'Mutation',
+        updateTodo: {
+          __typename: 'UpdateTodoResponse',
+          todo: {
+            __typename: 'Todo',
+            ...updated,
+          },
+        },
       },
       update: (cache, { data }) => {
         const todoItem = data?.updateTodo.todo
@@ -90,6 +157,7 @@ const TodoItem = ({ todo }: { todo: any }) => {
   }
   return (
     <li>
+      <TodoItemToggle todo={todo} />
       <TodoItemInput todo={todo} />
       <span>{todo?.description}</span>
       <span onClick={() => deleteTodo(todo.id)}>x</span>

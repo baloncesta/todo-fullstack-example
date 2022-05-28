@@ -66,7 +66,7 @@ export type Todo = {
 
 export enum TodoStatus {
   Active = 'active',
-  Completed = 'completed'
+  Complete = 'complete'
 }
 
 export type UpdateTodoResponse = {
