@@ -16,6 +16,16 @@ mutation createTheTodo($description: String!, $status: TodoStatus!) {
   }
 }
 
+mutation updateTheTodo($id: ID!, $description: String!, $status: TodoStatus!) {
+  updateTodo(id: $id, description: $description, status: $status) {
+    todo {
+      id
+      status
+      description
+    }
+  }
+}
+
 mutation deleteTheTodo($id: ID!) {
   deleteTodo(id: $id) {
     todo {

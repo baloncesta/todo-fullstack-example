@@ -7,19 +7,55 @@ import {
   useCreateTheTodoMutation,
   useDeleteTheTodoMutation,
   useGetTodosQuery,
+  useUpdateTheTodoMutation,
 } from './generated-types'
 
-const TodoItemInput = ({ description }: { description: string }) => {
+const TodoItemInput = ({ todo }: { todo: any }) => {
+  const [updateTheTodo] = useUpdateTheTodoMutation()
   const [theDescription, setTheDescription] = useState('')
+  const updateTodo = () => {
+    updateTheTodo({
+      variables: {
+        id: todo.id,
+        description: theDescription,
+        status: todo.status,
+      },
+      update: (cache, { data }) => {
+        const todoItem = data?.updateTodo.todo
+        if (!todoItem) {
+          return
+        }
+        cache.updateQuery<GetTodosQuery>(
+          {
+            query: GetTodosDocument,
+          },
+          (data) => {
+            if (!data) {
+              return
+            }
+            const todos = [...data.todos].map((todo) =>
+              todo?.id === todoItem.id ? { ...todo, ...todoItem } : todo
+            )
+            return {
+              todos,
+            }
+          }
+        )
+      },
+    })
+  }
   useEffect(() => {
-    setTheDescription(description)
-  }, [description])
+    setTheDescription(todo.description)
+  }, [todo.description])
   return (
-    <input
-      type="text"
-      value={theDescription}
-      onChange={(e) => setTheDescription(e.target.value)}
-    />
+    <>
+      <input
+        type="text"
+        value={theDescription}
+        onChange={(e) => setTheDescription(e.target.value)}
+      />
+      <button onClick={updateTodo}>submit</button>
+    </>
   )
 }
 
@@ -54,8 +90,9 @@ const TodoItem = ({ todo }: { todo: any }) => {
   }
   return (
     <li>
-      <TodoItemInput description={todo?.description} />
-      {todo?.description} <span onClick={() => deleteTodo(todo.id)}>x</span>
+      <TodoItemInput todo={todo} />
+      <span>{todo?.description}</span>
+      <span onClick={() => deleteTodo(todo.id)}>x</span>
     </li>
   )
 }
