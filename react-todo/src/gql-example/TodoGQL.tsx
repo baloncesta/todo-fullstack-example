@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import Form from './Form'
 import {
   GetTodosDocument,
@@ -7,6 +8,20 @@ import {
   useDeleteTheTodoMutation,
   useGetTodosQuery,
 } from './generated-types'
+
+const TodoItemInput = ({ description }: { description: string }) => {
+  const [theDescription, setTheDescription] = useState('')
+  useEffect(() => {
+    setTheDescription(description)
+  }, [description])
+  return (
+    <input
+      type="text"
+      value={theDescription}
+      onChange={(e) => setTheDescription(e.target.value)}
+    />
+  )
+}
 
 const TodoItem = ({ todo }: { todo: any }) => {
   const [deleteTheTodo] = useDeleteTheTodoMutation()
@@ -26,7 +41,9 @@ const TodoItem = ({ todo }: { todo: any }) => {
             if (!data) {
               return
             }
-            const todos = [...data.todos].filter((todo) => todoItem.id !== id)
+            const todos = [...data.todos].filter(
+              (todo) => todoItem.id !== todo?.id
+            )
             return {
               todos,
             }
@@ -37,6 +54,7 @@ const TodoItem = ({ todo }: { todo: any }) => {
   }
   return (
     <li>
+      <TodoItemInput description={todo?.description} />
       {todo?.description} <span onClick={() => deleteTodo(todo.id)}>x</span>
     </li>
   )
