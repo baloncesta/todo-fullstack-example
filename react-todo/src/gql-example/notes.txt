@@ -1,0 +1,35 @@
+// updateTheTodo({
+    //   variables: updatedTodo,
+    //   optimisticResponse: {
+    //     __typename: 'Mutation',
+    //     updateTodo: {
+    //       __typename: 'UpdateTodoResponse',
+    //       todo: {
+    //         __typename: 'Todo',
+    //         ...updatedTodo,
+    //       },
+    //     },
+    //   },
+    //   update: (cache, { data }) => {
+    //     const todoItem = data?.updateTodo.todo
+    //     if (!todoItem) {
+    //       return
+    //     }
+    //     cache.updateQuery<GetTodosQuery>(
+    //       {
+    //         query: GetTodosDocument,
+    //       },
+    //       (data) => {
+    //         if (!data) {
+    //           return
+    //         }
+    //         const todos = [...data.todos].map((todo) =>
+    //           todo?.id === todoItem.id ? updatedTodo : todo
+    //         )
+    //         return {
+    //           todos,
+    //         }
+    //       }
+    //     )
+    //   },
+    // })

@@ -104,7 +104,15 @@ export type GetTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetTodosQuery = { __typename?: 'Query', todos: Array<{ __typename?: 'Todo', id: string, description: string, status: TodoStatus } | null> };
 
+export type TodoFragment = { __typename?: 'Todo', id: string, description: string, status: TodoStatus };
 
+export const TodoFragmentDoc = gql`
+    fragment Todo on Todo {
+  id
+  description
+  status
+}
+    `;
 export const CreateTheTodoDocument = gql`
     mutation createTheTodo($description: String!, $status: TodoStatus!) {
   createTodo(description: $description, status: $status) {

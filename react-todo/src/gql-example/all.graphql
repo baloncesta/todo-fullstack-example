@@ -43,3 +43,9 @@ query getTodos {
     status
   }
 }
+
+fragment Todo on Todo {
+  id
+  description
+  status
+}

@@ -3,6 +3,8 @@ import Form from './Form'
 import {
   GetTodosDocument,
   GetTodosQuery,
+  TodoFragment,
+  TodoFragmentDoc,
   TodoStatus,
   useCreateTheTodoMutation,
   useDeleteTheTodoMutation,
@@ -10,17 +12,14 @@ import {
   useUpdateTheTodoMutation,
 } from './generated-types'
 
-const TodoItemToggle = ({ todo }: { todo: any }) => {
+/**
+ * Since this is used multiple times - the update todo
+ * logic was abstracted into a hook to be utilized by multiple
+ * components
+ */
+const useUpdateTheTodo = () => {
   const [updateTheTodo] = useUpdateTheTodoMutation()
-  const toggleTodo = () => {
-    const updatedTodo = {
-      id: todo.id,
-      description: todo.description,
-      status:
-        todo.status === TodoStatus.Active
-          ? TodoStatus.Complete
-          : TodoStatus.Active,
-    }
+  const update = (updatedTodo: any) => {
     updateTheTodo({
       variables: updatedTodo,
       optimisticResponse: {
@@ -34,94 +33,84 @@ const TodoItemToggle = ({ todo }: { todo: any }) => {
         },
       },
       update: (cache, { data }) => {
-        const todoItem = data?.updateTodo.todo
-        if (!todoItem) {
-          return
-        }
-        cache.updateQuery<GetTodosQuery>(
+        cache.updateFragment<TodoFragment>(
           {
-            query: GetTodosDocument,
+            id: cache.identify({
+              id: updatedTodo.id,
+              __typename: 'Todo',
+            }),
+            fragment: TodoFragmentDoc,
           },
-          (data) => {
-            if (!data) {
-              return
-            }
-            const todos = [...data.todos].map((todo) =>
-              todo?.id === todoItem.id ? updatedTodo : todo
-            )
-            return {
-              todos,
-            }
-          }
+          (_data) => updatedTodo
         )
       },
     })
   }
+  return update
+}
+
+const TodoItemToggle = ({ todo }: { todo: any }) => {
+  const updateTheTodo = useUpdateTheTodo()
+  const toggleTodo = () => {
+    const updatedTodo = {
+      id: todo.id,
+      description: todo.description,
+      status:
+        todo.status === TodoStatus.Active
+          ? TodoStatus.Complete
+          : TodoStatus.Active,
+    }
+    updateTheTodo(updatedTodo)
+  }
   return (
-    <input
-      type="checkbox"
-      onChange={toggleTodo}
-      checked={todo.status === TodoStatus.Complete}
-    />
+    <label className="container">
+      <input
+        type="checkbox"
+        onChange={toggleTodo}
+        checked={todo.status === TodoStatus.Complete}
+      />
+      <span className="checkmark"></span>
+    </label>
   )
 }
 
 const TodoItemInput = ({ todo }: { todo: any }) => {
-  const [updateTheTodo] = useUpdateTheTodoMutation()
+  const updateTheTodo = useUpdateTheTodo()
   const [theDescription, setTheDescription] = useState('')
+  const [inputVisible, setInputVisible] = useState(false)
   const updateTodo = () => {
-    const updated = {
+    const updatedTodo = {
       id: todo.id,
       description: theDescription,
       status: todo.status,
     }
-    updateTheTodo({
-      variables: updated,
-      optimisticResponse: {
-        __typename: 'Mutation',
-        updateTodo: {
-          __typename: 'UpdateTodoResponse',
-          todo: {
-            __typename: 'Todo',
-            ...updated,
-          },
-        },
-      },
-      update: (cache, { data }) => {
-        const todoItem = data?.updateTodo.todo
-        if (!todoItem) {
-          return
-        }
-        cache.updateQuery<GetTodosQuery>(
-          {
-            query: GetTodosDocument,
-          },
-          (data) => {
-            if (!data) {
-              return
-            }
-            const todos = [...data.todos].map((todo) =>
-              todo?.id === todoItem.id ? { ...todo, ...todoItem } : todo
-            )
-            return {
-              todos,
-            }
-          }
-        )
-      },
-    })
+    updateTheTodo(updatedTodo)
   }
   useEffect(() => {
     setTheDescription(todo.description)
   }, [todo.description])
+  const completed = todo.status === TodoStatus.Complete
   return (
     <>
-      <input
-        type="text"
-        value={theDescription}
-        onChange={(e) => setTheDescription(e.target.value)}
-      />
-      <button onClick={updateTodo}>submit</button>
+      {inputVisible ? (
+        <div className="todo-form">
+          <input
+            type="text"
+            value={theDescription}
+            className="todo-form-description"
+            onChange={(e) => setTheDescription(e.target.value)}
+          />
+          <button onClick={updateTodo}>submit</button>
+        </div>
+      ) : (
+        <div>
+          <span onClick={() => setInputVisible(!inputVisible)}>
+            <span className={completed ? 'strike' : ''}>
+              {todo?.description}
+            </span>
+          </span>
+        </div>
+      )}
     </>
   )
 }
@@ -156,11 +145,29 @@ const TodoItem = ({ todo }: { todo: any }) => {
     })
   }
   return (
-    <li>
-      <TodoItemToggle todo={todo} />
-      <TodoItemInput todo={todo} />
-      <span>{todo?.description}</span>
-      <span onClick={() => deleteTodo(todo.id)}>x</span>
+    <li
+      style={{
+        display: 'flex',
+        margin: '20px',
+        justifyContent: 'space-between',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+        }}
+      >
+        <TodoItemToggle todo={todo} />
+        <TodoItemInput todo={todo} />
+      </div>
+      <div>
+        <span
+          style={{ marginLeft: '20px' }}
+          onClick={() => deleteTodo(todo.id)}
+        >
+          x
+        </span>
+      </div>
     </li>
   )
 }
@@ -211,14 +218,14 @@ const TodoGQL = () => {
   if (error) return <p>Error :(</p>
   const todos = data?.todos || []
   return (
-    <>
+    <div style={{ width: '500px' }}>
       <Form onSubmit={addTheTodo} />
       <ul>
         {todos.map((todo) => (
           <TodoItem key={todo?.id} todo={todo} />
         ))}
       </ul>
-    </>
+    </div>
   )
 }
 
